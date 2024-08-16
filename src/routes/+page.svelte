@@ -10,8 +10,13 @@
 
   // Obtaining data from external sources
   onMount(async () => {
-    const response = await fetch("https://digitech.craighead.school.nz/api/restaurant")
-    availableItems = await response.json()
+    try {
+      const response = await fetch("https://digitech.craighead.school.nz/api/restaurant")
+      availableItems = await response.json()
+      console.log("Available Items:", availableItems) // For debugging
+    } catch (error) {
+      console.error("Failed to fetch data:", error)
+    }
   })
 
   // Adding items to a menu
