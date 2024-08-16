@@ -1,5 +1,6 @@
 <script>
   import Header from "$lib/Header.svelte"
+  import Card from "$lib/Card.svelte"
   import { onMount } from "svelte"
 
   // Constants and Variables
@@ -26,6 +27,11 @@
     selectedItems = [...selectedItems, item]
   }
 
+  // Removing item from menu
+  function removeItem(item) {
+    selectedItems = selectedItems.filter((selectedItem) => selectedItem.item !== item.item)
+  }
+
   // Calculate total cost including GST
   function calculateTotalCost() {
     return selectedItems.reduce((total, item) => total + item.price, 0) * (1 + GST_RATE)
@@ -45,11 +51,7 @@
   <div class="menu">
     <h2>Available Items</h2>
     {#each availableItems as item}
-      <div class="card">
-        <h3>{item.name}</h3>
-        <p>Price: ${item.price.toFixed(2)}</p>
-        <button on:click={() => addItem(item)}>Add to Custom Menu</button>
-      </div>
+      <Card {item} onAdd={addItem} />
     {/each}
   </div>
 
@@ -58,10 +60,7 @@
     <h2>Selected Items for {eventName || "your event"}</h2>
     {#if selectedItems.length > 0}
       {#each selectedItems as item}
-        <div class="card selected">
-          <h3>{item.name}</h3>
-          <p>Price: ${item.price.toFixed(2)}</p>
-        </div>
+        <Card {item} isSelected={true} onRemove={removeItem} />
       {/each}
       <h3>Total Cost (including GST): ${calculateTotalCost().toFixed(2)}</h3>
     {:else}
