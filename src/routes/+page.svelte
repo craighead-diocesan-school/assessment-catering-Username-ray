@@ -12,7 +12,9 @@
   onMount(async () => {
     try {
       const response = await fetch("https://digitech.craighead.school.nz/api/restaurant")
-      availableItems = await response.json()
+      const data = await response.json()
+
+      availableItems = [...data.breakfast, ...data.dinner, ...data.dessert]
       console.log("Available Items:", availableItems) // For debugging
     } catch (error) {
       console.error("Failed to fetch data:", error)
