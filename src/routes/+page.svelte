@@ -6,7 +6,11 @@
   // Constants and Variables
   const GST_RATE = 0.15
   let eventName = ""
-  let availableItems = []
+  let availableItems = {
+    breakfast: [],
+    dinner: [],
+    dessert: [],
+  }
   let selectedItems = []
 
   // Obtaining data from external sources
@@ -15,7 +19,11 @@
       const response = await fetch("https://digitech.craighead.school.nz/api/restaurant")
       const data = await response.json()
 
-      availableItems = [...data.breakfast, ...data.dinner, ...data.dessert]
+      availableItems = {
+        breakfast: data.breakfast,
+        dinner: data.dinner,
+        dessert: data.dessert,
+      }
       console.log("Available Items:", availableItems) // For debugging
     } catch (error) {
       console.error("Failed to fetch data:", error)
@@ -47,12 +55,30 @@
     <input id="event-name" bind:value={eventName} placeholder="Enter event name" />
   </div>
 
-  <!-- Listing available items -->
+  <!-- Listing available items by category-->
   <div class="menu">
     <h2>Available Items</h2>
-    {#each availableItems as item}
-      <Card {item} onAdd={addItem} />
-    {/each}
+
+    {#if availableItems.breakfast.length > 0}
+      <h3>Breakfast</h3>
+      {#each availableItems.breakfast as item}
+        <Card {item} onAdd={addItem} />
+      {/each}
+    {/if}
+
+    {#if availableItems.dinner.length > 0}
+      <h3>Dinner</h3>
+      {#each availableItems.dinner as item}
+        <Card {item} onAdd={addItem} />
+      {/each}
+    {/if}
+
+    {#if availableItems.dessert.length > 0}
+      <h3>Dessert</h3>
+      {#each availableItems.dessert as item}
+        <Card {item} onAdd={addItem} />
+      {/each}
+    {/if}
   </div>
 
   <!-- Listing selected items -->
