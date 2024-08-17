@@ -41,9 +41,7 @@
   }
 
   // Calculate total cost including GST
-  function calculateTotalCost() {
-    return selectedItems.reduce((total, item) => total + item.price, 0) * (1 + GST_RATE)
-  }
+  $: totalCost = selectedItems.reduce((total, item) => total + item.price, 0) * (1 + GST_RATE)
 </script>
 
 <Header />
@@ -88,7 +86,7 @@
       {#each selectedItems as item}
         <Card {item} isSelected={true} onRemove={removeItem} />
       {/each}
-      <h3>Total Cost (including GST): ${calculateTotalCost().toFixed(2)}</h3>
+      <h3>Total Cost (including GST): ${totalCost().toFixed(2)}</h3>
     {:else}
       <p>No items selected for your menu.</p>
     {/if}
