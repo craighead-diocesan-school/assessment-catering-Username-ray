@@ -32,7 +32,9 @@
 
   // Adding items to a menu
   function addItem(item) {
-    selectedItems = [...selectedItems, item]
+    if (!selectedItems.some((selectedItem) => selectedItem.item === item.item)) {
+      selectedItems = [...selectedItems, item]
+    }
   }
 
   // Removing item from menu
@@ -86,7 +88,7 @@
       {#each selectedItems as item}
         <Card {item} isSelected={true} onRemove={removeItem} />
       {/each}
-      <h3>Total Cost (including GST): ${totalCost().toFixed(2)}</h3>
+      <h3>Total Cost (including GST): ${totalCost.toFixed(2)}</h3>
     {:else}
       <p>No items selected for your menu.</p>
     {/if}
