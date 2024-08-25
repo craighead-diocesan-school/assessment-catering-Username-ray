@@ -1,19 +1,34 @@
 <script>
   export let item
-  export let isSelected = false
   export let onAdd
   export let onRemove
+  export let isAvailableSection = false // Indicates whether the Available Items section is enabled
+
+  // Item addition
+  function handleAdd() {
+    if (onAdd) {
+      onAdd(item)
+    }
+  }
+
+  // Item deletion
+  function handleRemove() {
+    if (onRemove) {
+      onRemove(item)
+    }
+  }
 </script>
 
-<div class="card">
+<div class:highlighted={item.selected && isAvailableSection} class="card">
   <img src={item.img} alt={item.item} width="100" height="100" />
   <h3>{item.item}</h3>
   <p>{item.description}</p>
   <p>Price: ${item.price.toFixed(2)}</p>
-  {#if isSelected}
-    <button class="remove-button" on:click={() => onRemove(item)}>Remove from Menu</button>
-  {:else}
-    <button class="add-button" on:click={() => onAdd(item)}>Add to Menu</button>
+  {#if onAdd}
+    <button class="add-button" on:click={handleAdd}>Add to Menu</button>
+  {/if}
+  {#if onRemove}
+    <button class="remove-button" on:click={handleRemove}>Remove from Menu</button>
   {/if}
 </div>
 
@@ -36,6 +51,16 @@
 
   .card:hover {
     background-color: azure;
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+
+  .highlighted {
+    background-color: pink; /* Change background for selected items */
+  }
+
+  .highlighted:hover {
+    background-color: lightpink;
     transform: translateY(-5px);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   }

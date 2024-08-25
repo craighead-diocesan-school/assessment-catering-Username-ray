@@ -25,7 +25,6 @@
         dinner: data.dinner,
         dessert: data.dessert,
       }
-      console.log("Available Items:", availableItems) // For debugging
     } catch (error) {
       console.error("Failed to fetch data:", error)
     }
@@ -33,7 +32,9 @@
 
   // Adding items to a menu
   function addItem(item) {
-    if (!selectedItems.some((selectedItem) => selectedItem.item === item.item)) {
+    if (!item.selected) {
+      item.selected = true
+      availableItems = availableItems
       selectedItems = [...selectedItems, item]
     }
   }
@@ -41,6 +42,8 @@
   // Removing item from menu
   function removeItem(item) {
     selectedItems = selectedItems.filter((selectedItem) => selectedItem.item !== item.item)
+    item.selected = false
+    availableItems = availableItems
   }
 
   // Calculate total cost including GST
