@@ -13,6 +13,7 @@
     dessert: [],
   }
   let selectedItems = []
+  let loading = true
 
   // Obtaining data from external sources
   onMount(async () => {
@@ -27,6 +28,8 @@
       }
     } catch (error) {
       console.error("Failed to fetch data:", error)
+    } finally {
+      loading = false
     }
   })
 
@@ -36,6 +39,8 @@
       item.selected = true
       availableItems = availableItems
       selectedItems = [...selectedItems, item]
+    } else {
+      alert("You've already selected the item. You can only select once.")
     }
   }
 
@@ -59,46 +64,50 @@
     <input id="event-name" bind:value={eventName} placeholder="Enter event name" />
   </div>
 
-  <div class="menu-container">
-    <!-- Listing available items by category-->
-    <div class="menu">
-      <h2>Available Items</h2>
+  {#if loading}
+    <p>Loading...</p>
+  {:else}
+    <div class="menu-container">
+      <!-- Listing available items by category-->
+      <div class="menu">
+        <h2>Available Items</h2>
 
-      {#if availableItems.breakfast.length > 0}
-        <h3>Breakfast</h3>
-        {#each availableItems.breakfast as item}
-          <Card {item} onAdd={addItem} />
-        {/each}
-      {/if}
+        {#if availableItems.breakfast.length > 0}
+          <h3>Breakfast</h3>
+          {#each availableItems.breakfast as item}
+            <Card {item} onAdd={addItem} isAvailableSection={true} />
+          {/each}
+        {/if}
 
-      {#if availableItems.dinner.length > 0}
-        <h3>Dinner</h3>
-        {#each availableItems.dinner as item}
-          <Card {item} onAdd={addItem} />
-        {/each}
-      {/if}
+        {#if availableItems.dinner.length > 0}
+          <h3>Dinner</h3>
+          {#each availableItems.dinner as item}
+            <Card {item} onAdd={addItem} isAvailableSection={true} />
+          {/each}
+        {/if}
 
-      {#if availableItems.dessert.length > 0}
-        <h3>Dessert</h3>
-        {#each availableItems.dessert as item}
-          <Card {item} onAdd={addItem} />
-        {/each}
-      {/if}
+        {#if availableItems.dessert.length > 0}
+          <h3>Dessert</h3>
+          {#each availableItems.dessert as item}
+            <Card {item} onAdd={addItem} isAvailableSection={true} />
+          {/each}
+        {/if}
+      </div>
+
+      <!-- Listing selected items -->
+      <div class="menu">
+        <h2>Selected Items for {eventName || "your event"}</h2>
+        {#if selectedItems.length > 0}
+          <h3>Total Cost (including GST): <span>${totalCost.toFixed(2)}</span></h3>
+          {#each selectedItems as item}
+            <Card {item} onRemove={removeItem} />
+          {/each}
+        {:else}
+          <p>No items selected for your menu.</p>
+        {/if}
+      </div>
     </div>
-
-    <!-- Listing selected items -->
-    <div class="menu">
-      <h2>Selected Items for {eventName || "your event"}</h2>
-      {#if selectedItems.length > 0}
-        <h3>Total Cost (including GST): <span>${totalCost.toFixed(2)}</span></h3>
-        {#each selectedItems as item}
-          <Card {item} isSelected={true} onRemove={removeItem} />
-        {/each}
-      {:else}
-        <p>No items selected for your menu.</p>
-      {/if}
-    </div>
-  </div>
+  {/if}
 </main>
 
 <Footer />
