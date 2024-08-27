@@ -21,11 +21,7 @@
       const response = await fetch("https://digitech.craighead.school.nz/api/restaurant")
       const data = await response.json()
 
-      availableItems = {
-        breakfast: data.breakfast,
-        dinner: data.dinner,
-        dessert: data.dessert,
-      }
+      availableItems = { ...availableItems, ...data }
     } catch (error) {
       console.error("Failed to fetch data:", error)
     } finally {
